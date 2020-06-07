@@ -76,6 +76,18 @@ services:
       bnet:
         ipv4_address: 192.168.0.8
 
+  node:
+    build: ./node/
+    container_name: b_node
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./code/:/data/code:rw
+    networks:
+      bnet:
+        ipv4_address: 192.168.0.9
+    tty: true
+
   memcached:
     build: ./memcached/
     container_name: b_memcached
