@@ -167,8 +167,6 @@ ENV PGID ${PGID}
 RUN groupmod -o -g ${PGID} www-data && \
     usermod -o -u ${PUID} -g www-data www-data
 
-COPY ./conf/php.ini /usr/local/etc/php/conf.d
-COPY ./conf/php-fpm.conf /usr/local/etc/php-fpm.d/
 
 # Install composer
 RUN curl -sS https://getcomposer.org/installer \

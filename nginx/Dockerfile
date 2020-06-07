@@ -15,7 +15,6 @@ RUN  apt-get update -yqq&&  apt-get install -yqq --no-install-recommends apt-uti
 #安装ping
 RUN apt-get install -yqq dialog iputils-ping net-tools vim
 
-COPY ./conf/nginx.conf /etc/nginx/
 RUN groupadd -f www && useradd -g www www
 CMD ["nginx", "-g", "daemon off;"]
 EXPOSE 80 443

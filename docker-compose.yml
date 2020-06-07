@@ -38,9 +38,9 @@ services:
       - MYSQL_VERSION=5.7
     volumes:
       - ./code/:/data/code/:rw
-      - ./mysql/conf/:/etc/mysql/
-      - ./mysql/logs:/var/logs/mysql/
-      - ./mysql/data:/var/lib/mysql/
+      - ./mysql/conf/mysql.conf:/etc/mysql/conf.d/my.cnf:ro
+      - ./mysql/logs:/var/logs/mysql/:rw
+      - ./mysql/data:/var/lib/mysql/:rw
     networks:
       bnet:
         ipv4_address: 192.168.0.6
@@ -53,7 +53,8 @@ services:
     volumes:
       - ./code/:/data/code/:rw
       - ./php/logs/:/var/logs/:rw
-      - ./php/conf/:/usr/local/etc/php/
+      - ./php/conf/php.ini:/usr/local/etc/php/conf.d/php.ini:ro
+      - ./php/conf/php-fpm.conf:/usr/local/etc/php-fpm.d/php-fpm.conf:ro
     links:
       - mysql
       - redis
@@ -69,8 +70,8 @@ services:
       - "6379:6379"
     volumes:
       - ./redis/conf/:/etc/redis/:ro
-      - ./redis/data/:/var/run/redis/
-      - ./redis/logs/:/var/logs/
+      - ./redis/data/:/var/run/redis/:rw
+      - ./redis/logs/:/var/logs/:rw
     networks:
       bnet:
         ipv4_address: 192.168.0.8
