@@ -79,11 +79,11 @@ RUN if [ ${INSTALL_XDEBUG} = true ]; then \
 ;fi
 
 # Copy xdebug configuration for remote debugging
-#COPY ./xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini
+COPY ./conf/xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini
 
-#RUN sed -i "s/xdebug.remote_autostart=0/xdebug.remote_autostart=1/" /usr/local/etc/php/conf.d/xdebug.ini && \
-#    sed -i "s/xdebug.remote_enable=0/xdebug.remote_enable=1/" /usr/local/etc/php/conf.d/xdebug.ini && \
-#    sed -i "s/xdebug.cli_color=0/xdebug.cli_color=1/" /usr/local/etc/php/conf.d/xdebug.ini
+RUN sed -i "s/xdebug.remote_autostart=0/xdebug.remote_autostart=1/" /usr/local/etc/php/conf.d/xdebug.ini && \
+    sed -i "s/xdebug.remote_enable=0/xdebug.remote_enable=1/" /usr/local/etc/php/conf.d/xdebug.ini && \
+    sed -i "s/xdebug.cli_color=0/xdebug.cli_color=1/" /usr/local/etc/php/conf.d/xdebug.ini
 
 
 ###########################################################################
@@ -101,6 +101,26 @@ RUN if [ ${INSTALL_PHPREDIS} = true ]; then \
     fi \
     && rm -rf /tmp/pear \
     && docker-php-ext-enable redis \
+;fi
+
+###########################################################################
+# PHP swoole:
+###########################################################################
+ARG INSTALL_SWOOLE=true
+
+RUN if [ ${INSTALL_SWOOLE} = true ]; then \
+    # Install Php Swoole Extension
+    if [ $(php -r "echo PHP_MAJOR_VERSION;") = "5" ]; then \
+      pecl install swoole-2.0.10; \
+    else \
+      if [ $(php -r "echo PHP_MINOR_VERSION;") = "0" ]; then \
+        pecl install swoole-2.2.0; \
+      else \
+        pecl install swoole; \
+      fi \
+    fi && \
+    docker-php-ext-enable swoole \
+    && php -m | grep -q 'swoole' \
 ;fi
 
 ###########################################################################
