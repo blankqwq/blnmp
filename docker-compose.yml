@@ -1,4 +1,13 @@
 version: "3"
+
+networks:
+  bnet:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 192.168.0.1/24
+
 services:
   nginx:
     build: ./nginx/
@@ -14,17 +23,27 @@ services:
       - ./nginx/logs/:/var/logs/nginx/:rw
     links:
       - php
+    networks:
+      bnet:
+        ipv4_address: 192.168.0.5
 
   mysql:
     build: ./mysql/
     container_name: b_mysql
     ports:
       - "3306:3306"
+    environment:
+      - TZ=Asia/Shanghai
+      - MYSQL_ROOT_PASSWORD=123456
+      - MYSQL_VERSION=5.7
     volumes:
       - ./code/:/data/code/:rw
       - ./mysql/conf/:/etc/mysql/
       - ./mysql/logs:/var/logs/mysql/
       - ./mysql/data:/var/lib/mysql/
+    networks:
+      bnet:
+        ipv4_address: 192.168.0.6
 
   php:
     build: ./php/
@@ -39,6 +58,9 @@ services:
       - mysql
       - redis
       - memcached
+    networks:
+      bnet:
+        ipv4_address: 192.168.0.7
 
   redis:
     build: ./redis/
@@ -49,13 +71,15 @@ services:
       - ./redis/conf/:/etc/redis/:ro
       - ./redis/data/:/var/run/redis/
       - ./redis/logs/:/var/logs/
+    networks:
+      bnet:
+        ipv4_address: 192.168.0.8
 
   memcached:
     build: ./memcached/
     container_name: b_memcached
     ports:
       - "11211:11211"
-
-networks:
-  default:
-    driver: bridge
+    networks:
+      bnet:
+        ipv4_address: 192.168.0.10

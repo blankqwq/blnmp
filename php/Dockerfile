@@ -1,8 +1,8 @@
 FROM php:7.3-fpm
 LABEL maintainer="blankqwq <github.com/blankqwq>"
 ENV TZ=Asia/Shanghai
-ARG CHANGE_SOURCE=true
 ENV DEBIAN_FRONTEND noninteractive
+ARG CHANGE_SOURCE=true
 
 RUN if [ ${CHANGE_SOURCE} = true ]; then \
     # Change application source from deb.debian.org to aliyun source
@@ -12,6 +12,8 @@ RUN if [ ${CHANGE_SOURCE} = true ]; then \
 ;fi
 ## Update Ubuntu
 RUN  apt-get update -yqq&& pecl channel-update pecl.php.net && apt-get install -yqq --no-install-recommends apt-utils dialog
+#安装ping
+RUN apt-get install -yqq dialog iputils-ping net-tools vim
 ## mcrypt
 RUN apt-get install -y libmcrypt-dev libzip-dev zip unzip
 RUN pecl install mcrypt
@@ -170,7 +172,7 @@ COPY ./conf/php-fpm.conf /usr/local/etc/php-fpm.d/
 
 # Install composer
 RUN curl -sS https://getcomposer.org/installer \
-| php -- --install-dir=/usr/bin/
+| php -- --install-dir=/usr/bin/ --filename=composer
 
 # Configure locale.
 ARG LOCALE=POSIX
