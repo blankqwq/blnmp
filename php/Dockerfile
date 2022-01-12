@@ -63,7 +63,6 @@ RUN if [ ${INSTALL_BZ2} = true ]; then \
 # xDebug:
 ###########################################################################
 
-ARG INSTALL_XDEBUG=true
 RUN if [ ${INSTALL_XDEBUG} = true ]; then \
   # Install the xdebug extension
   if [ $(php -r "echo PHP_MAJOR_VERSION;") = "5" ]; then \
@@ -198,5 +197,5 @@ RUN composer config -g repo.packagist composer https://mirrors.aliyun.com/compos
 ARG LOCALE=POSIX
 ENV LC_ALL ${LOCALE}
 CMD ["php-fpm"]
-EXPOSE 9000
+EXPOSE 9000 9501
 WORKDIR /data/code

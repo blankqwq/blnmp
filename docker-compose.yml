@@ -51,6 +51,7 @@ services:
     container_name: b_php
     ports:
       - "9000:9000"
+      - "9501:9501"
     environment:
       - INSTALL_XDEBUG=${PHP_INSTALL_XDEBUG}
       - SWOOLE_VERSION=${PHP_SWOOLE_VERSION}
