@@ -14,7 +14,6 @@ RUN if [ ${CHANGE_SOURCE} = true ]; then \
 RUN  apt-get update -yqq&&  apt-get install -yqq --no-install-recommends apt-utils dialog
 #安装ping
 RUN apt-get install -yqq dialog iputils-ping net-tools vim
-
 RUN groupadd -f www && useradd -g www www
 CMD ["nginx", "-g", "daemon off;"]
 EXPOSE 80 443

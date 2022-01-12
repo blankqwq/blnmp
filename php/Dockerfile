@@ -79,6 +79,7 @@ RUN if [ ${INSTALL_XDEBUG} = true ]; then \
 ;fi
 
 # Copy xdebug configuration for remote debugging
+RUN mkdir -m 777 -p ~/xdebug/phpstorm/tmp/profiling/
 COPY ./conf/xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini
 
 RUN sed -i "s/xdebug.remote_autostart=0/xdebug.remote_autostart=1/" /usr/local/etc/php/conf.d/xdebug.ini && \
@@ -116,7 +117,7 @@ RUN if [ ${INSTALL_SWOOLE} = true ]; then \
       if [ $(php -r "echo PHP_MINOR_VERSION;") = "0" ]; then \
         pecl install swoole-2.2.0; \
       else \
-        pecl install swoole-${SWOOLE_VERSION}; \
+        pecl install swoole-$SWOOLE_VERSION; \
       fi \
     fi && \
     docker-php-ext-enable swoole \
@@ -192,6 +193,7 @@ RUN groupmod -o -g ${PGID} www-data && \
 RUN curl -sS https://getcomposer.org/installer \
 | php -- --install-dir=/usr/bin/ --filename=composer
 
+RUN composer config -g repo.packagist composer https://mirrors.aliyun.com/composer/
 # Configure locale.
 ARG LOCALE=POSIX
 ENV LC_ALL ${LOCALE}

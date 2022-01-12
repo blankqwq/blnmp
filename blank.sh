@@ -1,6 +1,6 @@
 #!/bin/sh
 function println(){
-    echo "------${1}------"
+    echo "------\t\t${1}\t\t------"
 }
 
 function init(){
@@ -19,20 +19,49 @@ function composer(){
 }
 
 function get(){
-    cd $CODE_DIR_NAME
     println "get-start"
-    git clone $1 $2
+    cd $CODE_DIR_NAME
+    if [ -d $2  ] 
+    then
+        println "${2} dir exist"
+    else
+        git clone $1 $2
+    fi
+    cd ..
     println "composer install"
-    composer $2
+    flag=1
+    if [ -d "${CODE_DIR_NAME}/${2}/vendor" ]
+    then
+        echo "已检测到执行过composer ... "
+        echo "是否继续执行 [y/n]" && read y
+        if [ -z $y ] || [ $y = "n" ]
+        then
+            flag=0
+        fi
+    fi
+    if [ $flag -eq 1 ]
+    then
+        docker-compose exec php sh -c "cd ${2} && composer install"
+    fi
+    # 生成对应conf
+
+    # 重启nginx
+    docker_handle restart nginx
+    # 写入host
+
+    # other...
+
+
 }
 
 function docker_handle(){
+    set -x
     if [ $1 = "up" ] || [ $1 = "u" ]
     then
         docker-compose up -d
-    else 
-        docker-compose $1 $2 $3 $4 $5
+        return 0
     fi
+    docker-compose $*
 }
 
 function install(){
@@ -63,7 +92,7 @@ handle(){
             install $2
             ;;
         "d")
-            docker_handle $2
+            docker_handle $2 $3 $4
             ;;
         *)
             help
@@ -71,4 +100,4 @@ handle(){
     return 0
 }
 
-handle $1 $2
+handle $*

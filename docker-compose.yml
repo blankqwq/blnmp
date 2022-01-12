@@ -59,6 +59,7 @@ services:
       - ./php/logs/:/var/logs/:rw
       - ./php/conf/php.ini:/usr/local/etc/php/conf.d/php.ini:ro
       - ./php/conf/php-fpm.conf:/usr/local/etc/php-fpm.d/php-fpm.conf:ro
+      - ./php/conf/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini:rw
     links:
       - mysql
       - redis
