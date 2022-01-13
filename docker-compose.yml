@@ -47,14 +47,16 @@ services:
         ipv4_address: ${MYSQL_IP}
 
   php:
-    build: ./php/
+    build: 
+      context: ./php/
+      args:
+        - INSTALL_XDEBUG=${PHP_INSTALL_XDEBUG}
+        - SWOOLE_VERSION=${PHP_SWOOLE_VERSION}
+        - PHP_DOCKER_VERSION=${PHP_VERSION}
     container_name: b_php
     ports:
       - "9000:9000"
       - "9501:9501"
-    environment:
-      - INSTALL_XDEBUG=${PHP_INSTALL_XDEBUG}
-      - SWOOLE_VERSION=${PHP_SWOOLE_VERSION}
     volumes:
       - ./code/:/data/code/:rw
       - ./php/logs/:/var/logs/:rw
