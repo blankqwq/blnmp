@@ -8,5 +8,6 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+      - run: chmod +x blank.sh
       - name: Build
-        run: chmod +x blank.sh && ./blank.sh d build
+        run: ./blank.sh d build
