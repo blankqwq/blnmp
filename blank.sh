@@ -1,4 +1,5 @@
-#!/bin/sh
+#!/bin/bash
+
 function println(){
     echo "------\t\t${1}\t\t------"
 }
