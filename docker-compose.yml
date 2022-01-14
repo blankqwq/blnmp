@@ -13,8 +13,8 @@ services:
     build: ./nginx/
     container_name: b_nginx
     ports:
-      - "80:80"
-      - "443:443"
+      - "${NGINX_DOCKER_HTTP_PORT}:${NGINX_MAPPING_HTTP_PORT}"
+      - "${NGINX_DOCKER_HTTPS_PORT}:${NGINX_MAPPING_HTTPS_PORT}"
     volumes:
       - ./code/:/data/code:rw
       - ./nginx/conf/conf.d/:/etc/nginx/conf.d/:rw
@@ -32,7 +32,7 @@ services:
     build: ./mysql/
     container_name: b_mysql
     ports:
-      - "3306:3306"
+      - "${MYSQL_DOCKER_PORT}:${MYSQL_MAPPING_PORT}"
     environment:
       - TZ=${MYSQL_TZ}
       - MYSQL_VERSION=${MYSQL_VERSION}
@@ -75,7 +75,7 @@ services:
     build: ./redis/
     container_name: b_redis
     ports:
-      - "6379:6379"
+      - "${REDIS_DOCKER_PORT}:${REDIS_MAPPING_PORT}"
     volumes:
       - ./redis/conf/:/etc/redis/:ro
       - ./redis/data/:/var/run/redis/:rw
@@ -91,7 +91,7 @@ services:
         - NODE_DOCKER_VERSION=${NODE_VERSION}
     container_name: b_node
     ports:
-      - "8080:8080"
+      - "${NODE_DOCKER_PORT}:${NODE_MAPPING_PORT}"
     volumes:
       - ./code/:/data/code:rw
     networks:
@@ -103,7 +103,7 @@ services:
     build: ./memcached/
     container_name: b_memcached
     ports:
-      - "11211:11211"
+      - "${MEMCACHED_DOCKER_PORT}:${MEMCACHED_MAPPING_PORT}"
     networks:
       bnet:
         ipv4_address: ${MEMCACHED_IP}
