@@ -1,7 +1,8 @@
 #!/bin/bash
 
 function println(){
-    echo "------\t\t${1}\t\t------"
+    echo "start:    ${1}"
+    echo "---------------------"
 }
 
 function init(){
@@ -15,7 +16,56 @@ function create_nginx(){
     println "create-nginx-end"
 }
 
-function composer(){
+function get_user_input(){
+    read -p "${1}" y
+    flag=0
+    case $y in
+        "y")
+            flag=1
+            ;;
+        "n")
+            flag=0
+            ;;
+        *)
+            flag=$2
+    esac
+    return $flag
+}
+
+
+function composer_check(){
+    if [ -e "${BASE_DIR}/composer.json"  ]
+    then
+        flag=1
+        if [ -d "${BASE_DIR}/vendor" ]
+        then
+            echo "已检测到执行过composer ... "
+            get_user_input "是否继续执行 [y/n]"
+            flag=$?
+        fi
+        if [ $flag -eq 1 ]
+        then
+            docker-compose exec php sh -c "cd ${DOCKER_BASE_DIR} && composer install"
+        fi
+    fi
+    return 0
+}
+
+function npm_check(){
+    if [ -e "${BASE_DIR}/package.json"  ]
+    then
+        flag=1
+        if [ -d "${BASE_DIR}/node_modules" ]
+        then
+            echo "已检测到执行过npm ... "
+            get_user_input "是否继续执行 [y/n]"
+            flag=$?
+        fi
+        if [ $flag -eq 1 ]
+        then
+            docker-compose exec node sh -c "cd ${DOCKER_BASE_DIR} && cnpm install"
+        fi
+    fi
     return 0
 }
 
@@ -31,19 +81,13 @@ function get(){
     cd ..
     println "composer install"
     flag=1
-    if [ -d "${CODE_DIR_NAME}/${2}/vendor" ]
-    then
-        echo "已检测到执行过composer ... "
-        echo "是否继续执行 [y/n]" && read y
-        if [ -z $y ] || [ $y = "n" ]
-        then
-            flag=0
-        fi
-    fi
-    if [ $flag -eq 1 ]
-    then
-        docker-compose exec php sh -c "cd ${2} && composer install"
-    fi
+    name=$2
+    set +x
+    echo $name
+    BASE_DIR="${CODE_DIR_NAME}/${name}"
+    DOCKER_BASE_DIR="${DOCKER_CODE_DIR_NAME}/${name}"
+    composer_check $name
+    npm_check $name
     # 生成对应conf
 
     # 重启nginx
@@ -51,8 +95,6 @@ function get(){
     # 写入host
 
     # other...
-
-
 }
 
 function docker_handle(){

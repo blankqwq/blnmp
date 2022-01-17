@@ -14,10 +14,10 @@ services:
     container_name: b_nginx
     image: blankqwq/blnmp-nginx
     ports:
-      - "${NGINX_DOCKER_HTTP_PORT}:${NGINX_MAPPING_HTTP_PORT}"
-      - "${NGINX_DOCKER_HTTPS_PORT}:${NGINX_MAPPING_HTTPS_PORT}"
+      - "${NGINX_MAPPING_HTTP_PORT}:${NGINX_DOCKER_HTTP_PORT}"
+      - "${NGINX_MAPPING_HTTPS_PORT}:${NGINX_DOCKER_HTTPS_PORT}"
     volumes:
-      - ./code/:/data/code:rw
+      - ${CODE_DIR_NAME}/:${DOCKER_CODE_DIR_NAME}:rw
       - ./nginx/conf/conf.d/:/etc/nginx/conf.d/:rw
       - ./nginx/conf/nginx.conf:/etc/nginx/nginx.conf:ro
       - ./nginx/conf/fastcgi.conf:/etc/nginx/fastcgi.conf:ro
@@ -34,13 +34,13 @@ services:
     container_name: b_mysql
     image: blankqwq/blnmp-mysql
     ports:
-      - "${MYSQL_DOCKER_PORT}:${MYSQL_MAPPING_PORT}"
+      - "${MYSQL_MAPPING_PORT}:${MYSQL_DOCKER_PORT}"
     environment:
       - TZ=${MYSQL_TZ}
       - MYSQL_VERSION=${MYSQL_VERSION}
       - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
     volumes:
-      - ./code/:/data/code/:rw
+      - ${CODE_DIR_NAME}/:${DOCKER_CODE_DIR_NAME}:rw
       - ./mysql/conf/mysql.conf:/etc/mysql/conf.d/my.cnf:ro
       - ./mysql/logs:/var/logs/mysql/:rw
       - ./mysql/data:/var/lib/mysql/:rw
@@ -58,10 +58,10 @@ services:
     container_name: b_php
     image: blankqwq/blnmp-php-${PHP_VERSION}
     ports:
-      - "9000:9000"
-      - "9501:9501"
+      - "${PHP_OTHER_MAPPING_PORT}:${PHP_OTHER_DOCKER_PORT}"
+      - "${PHP_FPM_MAPPING_PORT}:${PHP_FPM_DOCKER_PORT}"
     volumes:
-      - ./code/:/data/code/:rw
+      - ${CODE_DIR_NAME}/:${DOCKER_CODE_DIR_NAME}:rw
       - ./php/logs/:/var/logs/:rw
       - ./php/conf/php.ini:/usr/local/etc/php/conf.d/php.ini:ro
       - ./php/conf/php-fpm.conf:/usr/local/etc/php-fpm.d/php-fpm.conf:ro
@@ -79,7 +79,7 @@ services:
     container_name: b_redis
     image: blankqwq/blnmp-redis
     ports:
-      - "${REDIS_DOCKER_PORT}:${REDIS_MAPPING_PORT}"
+      - "${REDIS_MAPPING_PORT}:${REDIS_DOCKER_PORT}"
     volumes:
       - ./redis/conf/:/etc/redis/:ro
       - ./redis/data/:/var/run/redis/:rw
@@ -96,9 +96,9 @@ services:
     container_name: b_node
     image: blankqwq/blnmp-node
     ports:
-      - "${NODE_DOCKER_PORT}:${NODE_MAPPING_PORT}"
+      - "${NODE_MAPPING_PORT}:${NODE_DOCKER_PORT}"
     volumes:
-      - ./code/:/data/code:rw
+      - ${CODE_DIR_NAME}/:${DOCKER_CODE_DIR_NAME}:rw
     networks:
       bnet:
         ipv4_address: ${NODE_IP}
@@ -109,7 +109,7 @@ services:
     container_name: b_memcached
     image: blankqwq/blnmp-memcached
     ports:
-      - "${MEMCACHED_DOCKER_PORT}:${MEMCACHED_MAPPING_PORT}"
+      - "${MEMCACHED_MAPPING_PORT}:${MEMCACHED_DOCKER_PORT}"
     networks:
       bnet:
         ipv4_address: ${MEMCACHED_IP}
