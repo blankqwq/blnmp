@@ -2,25 +2,29 @@ name: Build Docker
 
 on:
   schedule:
-    - cron: '15 10 * * *'
+    - cron: "15 10 * * *"
   push:
-    branches: [ master ]
+    branches: [master]
     # Publish semver tags as releases.
-    tags: [ 'v*.*.*' ]
+    tags: ["v*.*.*"]
   pull_request:
-    branches: [ master ]
+    branches: [master]
 
 jobs:
   build:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        php: [ 7.2, 7.3 , 7.4 ]
+        php: [7.2, 7.3, 7.4, 8.0]
+        nginx: [1.17, 1.20]
+        node: [14, 16, 17]
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
       - run: chmod +x blank.sh
       - run: sed 's/\(PHP_VERSION=\).*/\1${matrix.php}/g' .env.example > .env
+      - run: sed 's/\(NODE_VERSION=\).*/\1${matrix.node}/g' .env > .env
+      - run: sed 's/\(NGINX_VERSION=\).*/\1${matrix.nginx}/g' .env > .env
       - name: Build
         run: ./blank.sh d build
       - name: Log into docker
