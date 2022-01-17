@@ -13,10 +13,14 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        php: [ 7.2, 7.3 , 7.4 ]
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
       - run: chmod +x blank.sh
+      - run: sed 's/\(PHP_VERSION=\).*/\1${matrix.php}/g' .env
       - name: Build
         run: ./blank.sh d build
       - name: Log into docker
