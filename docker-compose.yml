@@ -13,7 +13,7 @@ services:
     build: 
       context: ./nginx/
       args:
-        - NGINX_VERSION=${NGINX_VERSION}
+        - NGINX_INSTALL_VERSION=${NGINX_VERSION}
     container_name: b_nginx
     image: blankqwq/blnmp-nginx-${NGINX_VERSION}
     ports:

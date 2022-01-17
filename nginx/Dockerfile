@@ -1,5 +1,5 @@
-ARG NGINX_VERSION = 1.17
-FROM nginx:${NGINX_VERSION}
+ARG NGINX_INSTALL_VERSION = 1.17
+FROM nginx:${NGINX_INSTALL_VERSION}
 
 LABEL maintainer="blankqwq <github.com/blankqwq>"
 ENV DEBIAN_FRONTEND noninteractive

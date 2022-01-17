@@ -20,15 +20,15 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
       - run: chmod +x blank.sh
-      - run: sed 's/\(PHP_VERSION=\).*/\1${matrix.php}/g' .env.example > .env
-      - name: Build
-        run: ./blank.sh d build php
       - name: Log into docker
         if: ${{ github.event_name != 'pull_request' }}
         uses: docker/login-action@v1
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - run: sed 's/\(PHP_VERSION=\).*/\1${{ matrix.name }}/g' .env.example > .env
+      - name: Build
+        run: ./blank.sh d build php
       - name: Push image
         if: ${{ github.event_name != 'pull_request' }}
         run: docker-compose push php
