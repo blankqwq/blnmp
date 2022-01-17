@@ -21,8 +21,6 @@ jobs:
         uses: actions/checkout@v2
       - run: chmod +x blank.sh
       - run: sed 's/\(PHP_VERSION=\).*/\1${matrix.php}/g' .env.example > .env
-      - run: sed 's/\(NODE_VERSION=\).*/\1${matrix.node}/g' .env > .env
-      - run: sed 's/\(NGINX_VERSION=\).*/\1${matrix.nginx}/g' .env > .env
       - name: Build
         run: ./blank.sh d build
       - name: Log into docker
