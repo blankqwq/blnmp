@@ -1,4 +1,4 @@
-ARG NGINX_INSTALL_VERSION = 1.17
+ARG NGINX_INSTALL_VERSION
 FROM nginx:${NGINX_INSTALL_VERSION}
 
 LABEL maintainer="blankqwq <github.com/blankqwq>"

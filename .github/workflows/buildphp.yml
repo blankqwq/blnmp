@@ -26,7 +26,7 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-      - run: sed 's/\(PHP_VERSION=\).*/\1${{ matrix.name }}/g' .env.example > .env
+      - run: sed 's/\(PHP_VERSION=\).*/\1${{ matrix.php }}/g' .env.example > .env
       - name: Build
         run: ./blank.sh d build php
       - name: Push image
