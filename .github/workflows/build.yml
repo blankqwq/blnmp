@@ -20,7 +20,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
       - run: chmod +x blank.sh
-      - run: sed 's/\(PHP_VERSION=\).*/\1${matrix.php}/g' .env.example > .env
       - name: Build
         run: ./blank.sh d build ${matrix.name}
       - name: Log into docker
