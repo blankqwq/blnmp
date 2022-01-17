@@ -15,7 +15,7 @@ services:
       args:
         - NGINX_INSTALL_VERSION=${NGINX_VERSION}
     container_name: b_nginx
-    image: blankqwq/blnmp-nginx-${NGINX_VERSION}
+    image: blankqwq/blnmp-nginx:${NGINX_VERSION}-a
     ports:
       - "${NGINX_MAPPING_HTTP_PORT}:${NGINX_DOCKER_HTTP_PORT}"
       - "${NGINX_MAPPING_HTTPS_PORT}:${NGINX_DOCKER_HTTPS_PORT}"
@@ -59,7 +59,7 @@ services:
         - SWOOLE_VERSION=${PHP_SWOOLE_VERSION}
         - PHP_DOCKER_VERSION=${PHP_VERSION}
     container_name: b_php
-    image: blankqwq/blnmp-php-${PHP_VERSION}
+    image: blankqwq/blnmp-php:${PHP_VERSION}-a
     ports:
       - "${PHP_OTHER_MAPPING_PORT}:${PHP_OTHER_DOCKER_PORT}"
       - "${PHP_FPM_MAPPING_PORT}:${PHP_FPM_DOCKER_PORT}"
@@ -97,7 +97,7 @@ services:
       args:
         - NODE_DOCKER_VERSION=${NODE_VERSION}
     container_name: b_node
-    image: blankqwq/blnmp-node-${NODE_VERSION}
+    image: blankqwq/blnmp-node:${NODE_VERSION}-a
     ports:
       - "${NODE_MAPPING_PORT}:${NODE_DOCKER_PORT}"
     volumes:
