@@ -17,7 +17,7 @@ function create_nginx(){
 }
 
 function get_user_input(){
-    read -p "${1}" y
+    read -p "${1}:" y
     flag=0
     case $y in
         "y")
@@ -47,6 +47,7 @@ function composer_check(){
         then
             docker-compose exec php sh -c "cd ${DOCKER_BASE_DIR} && composer install"
         fi
+        return 1
     fi
     return 0
 }
@@ -65,8 +66,34 @@ function npm_check(){
         then
             docker-compose exec node sh -c "cd ${DOCKER_BASE_DIR} && cnpm install"
         fi
+        return 1
     fi
     return 0
+}
+
+function nginx_generate(){
+    name=${1}
+    WEB_SITE="www.${name}.test"
+    WEB_SITE_PUBLIC="${name}\/public"
+    if [ ! -e "${BASE_DIR}/public" ] 
+    then
+        WEB_SITE_PUBLIC="${name}"
+    fi
+    TARGET_NGINX_FILE=$NGINX_DIR/$WEB_SITE.conf
+    TEMPLATE_FILE=$TEMPLATE_DIR/nginx/php.conf
+    flag=1
+    if [ -e "${TARGET_NGINX_FILE}"  ]
+    then
+        echo "已检测到执行过nginx generate ... "
+        get_user_input "是否继续执行 [y/n]"
+        flag=$?
+    fi
+    if [ ${flag} -eq 1 ]
+    then 
+        # generate
+        sed -e 's/${DOMAIN}/'"$WEB_SITE"'/g' -e  's/${PATH}/'"$WEB_SITE_PUBLIC"'/g' ${TEMPLATE_FILE} > ${TARGET_NGINX_FILE}
+    fi
+    docker_handle restart nginx
 }
 
 function get(){
@@ -86,15 +113,16 @@ function get(){
     echo $name
     BASE_DIR="${CODE_DIR_NAME}/${name}"
     DOCKER_BASE_DIR="${DOCKER_CODE_DIR_NAME}/${name}"
+    NGINX_DIR="./nginx/conf/vhost/"
     composer_check $name
-    npm_check $name
-    # 生成对应conf
-
-    # 重启nginx
-    docker_handle restart nginx
-    # 写入host
-
-    # other...
+    IS_BE=$?
+    if [ ${IS_BE} -eq 1 ]
+    then
+        nginx_generate $name
+    else
+        npm_check $name
+        IS_FE=($?)
+    fi
 }
 
 function docker_handle(){
