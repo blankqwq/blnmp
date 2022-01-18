@@ -16,18 +16,16 @@ RUN  apt-get update -yqq&& pecl channel-update pecl.php.net && apt-get install -
 #安装ping
 RUN apt-get install -yqq dialog iputils-ping net-tools vim
 ## mcrypt
-RUN apt-get install -y libmcrypt-dev libzip-dev zip unzip
-RUN pecl install mcrypt
-RUN docker-php-ext-enable mcrypt
+RUN apt-get install -y libmcrypt-dev libzip-dev zip unzip libssl-dev libmemcached-dev curl
+
+RUN if [ $(php -r "echo PHP_MAJOR_VERSION;") != "8" ]; then \
+    pecl install mcrypt && docker-php-ext-enable mcrypt ; \
+    fi
 ## GD
-RUN apt-get install -y libfreetype6-dev libjpeg62-turbo-dev libpng-dev
+RUN apt-get install -y libfreetype6-dev libjpeg62-turbo-dev libpng-dev libjpeg-dev libwebp-dev
 RUN docker-php-ext-configure gd
 RUN docker-php-ext-install -j$(nproc) gd
-
-## Intl
-RUN apt-get install -y libicu-dev 
-RUN docker-php-ext-install -j$(nproc) intl
-
+RUN php -r 'var_dump(gd_info());'
 
 
 RUN docker-php-ext-install pcntl
@@ -109,20 +107,21 @@ RUN if [ ${INSTALL_PHPREDIS} = true ]; then \
 ###########################################################################
 ARG INSTALL_SWOOLE=true
 ARG SWOOLE_VERSION=4.7.0
-RUN if [ ${INSTALL_SWOOLE} = true ]; then \
-    # Install Php Swoole Extension
-    if [ $(php -r "echo PHP_MAJOR_VERSION;") = "5" ]; then \
-      pecl install swoole-2.0.10; \
-    else \
-      if [ $(php -r "echo PHP_MINOR_VERSION;") = "0" ]; then \
-        pecl install swoole-2.2.0; \
+RUN set -eux; \
+    if [ ${INSTALL_SWOOLE} = true ]; then \
+      # Install Php Swoole Extension
+      if   [ $(php -r "echo PHP_VERSION_ID - PHP_RELEASE_VERSION;") = "50600" ]; then \
+        pecl install swoole-2.0.10; \
+      elif [ $(php -r "echo PHP_VERSION_ID - PHP_RELEASE_VERSION;") = "70000" ]; then \
+        pecl install swoole-4.3.5; \
+      elif [ $(php -r "echo PHP_VERSION_ID - PHP_RELEASE_VERSION;") = "70100" ]; then \
+        pecl install swoole-4.5.11; \
       else \
-        pecl install swoole-$SWOOLE_VERSION; \
-      fi \
-    fi && \
-    docker-php-ext-enable swoole \
-    && php -m | grep -q 'swoole' \
-;fi
+        pecl install swoole-${SWOOLE_VERSION}; \
+      fi; \
+      docker-php-ext-enable swoole; \
+      php -m | grep -q 'swoole'; \
+    fi
 
 ###########################################################################
 # Xhprof:
