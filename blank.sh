@@ -140,8 +140,9 @@ function install(){
 }
 
 function help(){
-    echo "please intput [init|get|install]"
-    echo "many uses input -h"
+    echo "please intput [init|d|get]"
+    echo "d: docker-compose handle"
+    echo "get: project init"
 }
 
 handle(){
