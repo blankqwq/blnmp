@@ -7,8 +7,7 @@ function println(){
 
 function init(){
     println "build-start"
-    docker-compose build
-
+    docker_handle pull
 }
 
 function create_nginx(){
