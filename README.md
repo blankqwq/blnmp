@@ -12,9 +12,9 @@ docker-compose
 
 克隆仓库`git clone <git>`，
 
-执行`composer install`
+执行`composer install` 或者执行 `cnpm i`
 
-生成nginx模版`未完成`
+生成nginx模版
 
 重启nginx
 
