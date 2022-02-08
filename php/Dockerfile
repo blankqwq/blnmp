@@ -106,7 +106,7 @@ RUN if [ ${INSTALL_PHPREDIS} = true ]; then \
 # PHP swoole:
 ###########################################################################
 ARG INSTALL_SWOOLE=true
-ARG SWOOLE_VERSION=4.7.0
+# ARG SWOOLE_VERSION=4.7.0
 RUN set -eux; \
     if [ ${INSTALL_SWOOLE} = true ]; then \
       # Install Php Swoole Extension
@@ -117,7 +117,7 @@ RUN set -eux; \
       elif [ $(php -r "echo PHP_VERSION_ID - PHP_RELEASE_VERSION;") = "70100" ]; then \
         pecl install swoole-4.5.11; \
       else \
-        pecl install swoole-${SWOOLE_VERSION}; \
+        pecl install swoole \
       fi; \
       docker-php-ext-enable swoole; \
       php -m | grep -q 'swoole'; \
