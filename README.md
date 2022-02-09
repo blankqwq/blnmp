@@ -10,17 +10,23 @@ docker-compose
 ./blank.sh d u #docker-compose up -d
 ```
 
+会执行以下操作
+
 克隆仓库`git clone <git>`，
 
-执行`composer install` 或者执行 `cnpm i`
+执行`composer install`
 
 生成nginx模版
 
 重启nginx
 
-```shell
-./blank.sh get <.git> <newFileName>
-```
+# docker 安装
+
+> linux
+
+> macos
+
+> windows
 
 ## next
 
