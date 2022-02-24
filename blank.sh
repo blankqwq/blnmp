@@ -105,7 +105,7 @@ function get(){
         git clone $1 $2
     fi
     cd ..
-    println "composer install"
+    println "start other install"
     flag=1
     name=$2
     set +x

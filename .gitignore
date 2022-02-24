@@ -1,5 +1,6 @@
 *.idea
 *.vscode
 .env
+.DS_Store
 /code/*
 !/code/test
