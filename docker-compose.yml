@@ -14,6 +14,7 @@ services:
       context: ./nginx/
       args:
         - NGINX_INSTALL_VERSION=${NGINX_VERSION}
+        - CHANGE_SOURCE=${CHANGE_SOURCE}
     container_name: b_nginx
     image: blankqwq/blnmp-nginx:${NGINX_VERSION}-a
     ports:
@@ -37,6 +38,7 @@ services:
       context: ./mysql/
       args:
         - MYSQL_VERSION=${MYSQL_VERSION}
+        - CHANGE_SOURCE=${CHANGE_SOURCE}
     container_name: b_mysql
     image: blankqwq/blnmp-mysql:${MYSQL_VERSION}-a
     ports:
@@ -61,6 +63,7 @@ services:
         - INSTALL_XDEBUG=${PHP_INSTALL_XDEBUG}
         - SWOOLE_VERSION=${PHP_SWOOLE_VERSION}
         - PHP_DOCKER_VERSION=${PHP_VERSION}
+        - CHANGE_SOURCE=${CHANGE_SOURCE}
     container_name: b_php
     image: blankqwq/blnmp-php:${PHP_VERSION}-a
     ports:
@@ -80,7 +83,10 @@ services:
         ipv4_address: ${PHP_FPM_IP}
 
   redis:
-    build: ./redis/
+    build: 
+      context: ./redis/
+      args:
+        - CHANGE_SOURCE=${CHANGE_SOURCE}
     container_name: b_redis
     image: blankqwq/blnmp-redis
     ports:
