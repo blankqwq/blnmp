@@ -33,23 +33,26 @@ services:
         ipv4_address: ${NGINX_IP} 
 
   mysql:
-    build: ./mysql/
+    build: 
+      context: ./mysql/
+      args:
+        - MYSQL_VERSION=${MYSQL_VERSION}
     container_name: b_mysql
-    image: blankqwq/blnmp-mysql
+    image: blankqwq/blnmp-mysql:${MYSQL_VERSION}-a
     ports:
       - "${MYSQL_MAPPING_PORT}:${MYSQL_DOCKER_PORT}"
     environment:
       - TZ=${MYSQL_TZ}
-      - MYSQL_VERSION=${MYSQL_VERSION}
       - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
     volumes:
-      - ${CODE_DIR_NAME}/:${DOCKER_CODE_DIR_NAME}:rw
       - ./mysql/conf/mysql.conf:/etc/mysql/conf.d/my.cnf:ro
       - ./mysql/logs:/var/logs/mysql/:rw
       - ./mysql/data:/var/lib/mysql/:rw
     networks:
       bnet:
         ipv4_address: ${MYSQL_IP}
+    security_opt:
+      - seccomp:unconfined
 
   php:
     build: 
@@ -62,7 +65,6 @@ services:
     image: blankqwq/blnmp-php:${PHP_VERSION}-a
     ports:
       - "${PHP_OTHER_MAPPING_PORT}:${PHP_OTHER_DOCKER_PORT}"
-      - "${PHP_FPM_MAPPING_PORT}:${PHP_FPM_DOCKER_PORT}"
     volumes:
       - ${CODE_DIR_NAME}/:${DOCKER_CODE_DIR_NAME}:rw
       - ./php/logs/:/var/logs/:rw

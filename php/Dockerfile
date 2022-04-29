@@ -27,7 +27,7 @@ RUN docker-php-ext-configure gd
 RUN docker-php-ext-install -j$(nproc) gd
 RUN php -r 'var_dump(gd_info());'
 
-
+RUN docker-php-ext-install zip
 RUN docker-php-ext-install pcntl
 RUN docker-php-ext-install opcache
 RUN docker-php-ext-install pdo_mysql

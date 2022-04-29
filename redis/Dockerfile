@@ -1,4 +1,5 @@
-FROM redis:5.0
+ARG REDIS_VERSION=5.0
+FROM redis:${REDIS_VERSION}
 
 ARG CHANGE_SOURCE=true
 RUN if [ ${CHANGE_SOURCE} = true ]; then \

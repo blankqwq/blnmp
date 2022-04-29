@@ -15,7 +15,7 @@ RUN  apt-get update -yqq&&  apt-get install -yqq --no-install-recommends apt-uti
 #安装ping
 RUN apt-get install -yqq dialog iputils-ping net-tools vim
 
-RUN mkdir -p /var/logs/mysql/ && chmod 777 /var/log/mysql
+RUN mkdir -p /var/logs/mysql/ && chmod 777 /var/logs/mysql
 COPY ./conf/mysql.conf /etc/mysql/conf.d/my.cnf
 RUN chmod 0444 /etc/mysql/conf.d/my.cnf
 
